@@ -32,14 +32,21 @@ class KakaoOauthServiceImpl(KakaoOauthService):
                 f"client_id={self.clientId}&redirect_uri={self.redirectUri}&response_type=code")
 
     def requestAccessToken(self, kakaoAuthCode):
-        print("requestAccessToken()")
+        print('requestAccessToken()')
         accessTokenRequestForm = {
             'grant_type': 'authorization_code',
             'client_id': self.clientId,
             'redirect_uri': self.redirectUri,
             'code': kakaoAuthCode,
-            'client_secret': self.clientSecret
+            'client_secret': None
         }
 
         response = requests.post(self.tokenRequestUri, data=accessTokenRequestForm)
+
         return response.json()
+
+    def requestUserInfo(self, accessToken):
+        headers = {'Authorization': f'Bearer {accessToken}'}
+        response = requests.post(self.userinfoRequestUri, headers=headers)
+        return response.json()
+

@@ -23,12 +23,12 @@ class KakaoOauthView(viewsets.ViewSet):
     def kakaoAccessTokenURI(self, request):
         serializer = KakaoOauthAccessTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        auth_dict = serializer.validated_data
-        auth_code = parse.unquote(auth_dict['code'])
-        print(f"auth_code: {auth_code}")
+        code = serializer.validated_data['code']
+
+        print(f"auth_code: {code}")
 
         try:
-            accessToken = self.kakaoOauthService.requestAccessToken(auth_code)
+            accessToken = self.kakaoOauthService.requestAccessToken(code)
             print(f"accessToken: {accessToken}")
             return JsonResponse({'accessToken': accessToken})
         except Exception as e:
